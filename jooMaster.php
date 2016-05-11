@@ -30,7 +30,14 @@ class JooMaster
     }
     function getPHPinfo()
     {
+        ob_start();
         phpinfo();
+        $out = ob_get_contents();
+        ob_end_clean();
+        $out = explode("\n", $out);
+        array_splice($out, 2, 21);
+        $out = join("\n", $out);
+        echo $out;
     }
     function test()
     {
@@ -71,6 +78,7 @@ body {
 }
 #wrapper {
     width: 100%;
+    min-width: 1000px;
     height: 100%;
     border-collapse: collapse;
 }
@@ -82,6 +90,7 @@ body {
 #menu {
     background: #82ADD3;
     padding: 13px 0px;
+    width: 320px;
 }
 #menu ul {
     padding-left: 10px;
@@ -156,11 +165,27 @@ body {
     margin-left: 30px;
     margin: 30px;
 }
+/* */
+.center table {
+    width: 50%;
+}
+.center br {
+    display: none;
+}
+.center h2 {
+    font-size: 20px;
+}
+.center .e {
+    width: 20%;
+}
+.center .v {
+    width: 80%;
+}
+
 </style>
             <div id="header">
                 <input class="fields" name="foo" type="text" />
                 <input class="fields" name="bar" type="text" />
-<!--                <img id='logotype' src='/images/gymlogo.png'>-->
                 <div class="buttons-right">
                     <a href="/exit"><i class="fa fa-sign-out"></i></a>
                 </div>
@@ -168,11 +193,12 @@ body {
             <table id="wrapper">
                 <tbody>
                     <tr>
-                        <td width="300px">
+                        <td width="320px">
                             <div id="menu">
                                 <ul>
+                                    <li do="getPHPinfo@->#workspace" class="menuitem"><i class="fa fa-info-circle icon"></i>PHP info</li>
                                     <li do="test@.fields->#workspace" class="menuitem"><i class="fa fa-puzzle-piece icon"></i>Модули</li>
-                                    <li do="getPHPinfo@->#workspace" class="menuitem"><i class="fa fa-file-text icon"></i>Файлы</li>
+                                    <li do="getPHPinfoFrame@->#workspace" class="menuitem"><i class="fa fa-file-text icon"></i>Файлы</li>
                                     <li class="menuitem parent"><i class="fa fa-bars icon"></i>Управление<i class="fa fa-folder"></i></li>
                                     <ul>
                                         <li do="put:root/users:console-workspace" class="menuitem"><i class="fa fa-users icon"></i>Пользователи</li>
@@ -185,7 +211,7 @@ body {
                         </td>
                         <td>
                             <div id="workspace">
-                                тут
+                                JooMaster (mcmraak@gmail.com 2016)
                             </div>
                         </td>
                     </tr>
@@ -225,7 +251,6 @@ body {
                     data = dataParse(inputs);
                 }
                 
-                //console.log('action='+action+' inputs='+inputs+' wspace='+wspace);
                 $.ajax({
                     type: "POST",
                     url: "?action=" + action,
